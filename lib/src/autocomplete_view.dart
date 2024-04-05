@@ -1,10 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart' hide ErrorBuilder;
-import 'package:form_builder_extra_fields/form_builder_extra_fields.dart';
-import 'package:http/http.dart';
-
-import '../map_location_picker.dart';
-import 'logger.dart';
+import 'package:flutter/material.dart't 'logger.dart';
 
 ValueNotifier<T> useState<T>(T initialData) {
   return ValueNotifier<T>(initialData);
@@ -130,15 +124,6 @@ class PlacesAutocomplete extends StatelessWidget {
   /// ```
   final Widget Function(BuildContext, Prediction)? itemBuilder;
 
-  /// The decoration of the material sheet that contains the suggestions.
-  ///
-  /// If null, default decoration with an elevation of 4.0 is used
-  final SuggestionsBoxDecoration suggestionsBoxDecoration;
-
-  /// Used to control the `_SuggestionsBox`. Allows manual control to
-  /// open, close, toggle, or resize the `_SuggestionsBox`.
-  final SuggestionsBoxController? suggestionsBoxController;
-
   /// The duration to wait after the user stops typing before calling
   /// [suggestionsCallback]
   ///
@@ -189,32 +174,6 @@ class PlacesAutocomplete extends StatelessWidget {
   /// If not specified, the error is shown in [ThemeData.errorColor](https://docs.flutter.io/flutter/material/ThemeData/errorColor.html)
   final Widget Function(BuildContext, Object?)? errorBuilder;
 
-  /// Called to display animations when [suggestionsCallback] returns suggestions
-  ///
-  /// It is provided with the suggestions box instance and the animation
-  /// controller, and expected to return some animation that uses the controller
-  /// to display the suggestion box.
-  ///
-  /// For example:
-  /// ```dart
-  /// transitionBuilder: (context, suggestionsBox, animationController) {
-  ///   return FadeTransition(
-  ///     child: suggestionsBox,
-  ///     opacity: CurvedAnimation(
-  ///       parent: animationController,
-  ///       curve: Curves.fastOutSlowIn
-  ///     ),
-  ///   );
-  /// }
-  /// ```
-  /// This argument is best used with [animationDuration] and [animationStart]
-  /// to fully control the animation.
-  ///
-  /// To fully remove the animation, just return `suggestionsBox`
-  ///
-  /// If not specified, a [SizeTransition](https://docs.flutter.io/flutter/widgets/SizeTransition-class.html) is shown.
-  final AnimationTransitionBuilder? transitionBuilder;
-
   /// The duration that [transitionBuilder] animation takes.
   ///
   /// This argument is best used with [transitionBuilder] and [animationStart]
@@ -241,10 +200,6 @@ class PlacesAutocomplete extends StatelessWidget {
   ///
   /// Defaults to 0.25.
   final double animationStart;
-
-  /// The configuration of the [TextField](https://docs.flutter.io/flutter/material/TextField-class.html)
-  /// that the TypeAhead widget displays
-  final TextFieldConfiguration textFieldConfiguration;
 
   /// How far below the text field should the suggestions box be
   ///
@@ -408,11 +363,7 @@ class PlacesAutocomplete extends StatelessWidget {
     this.loadingBuilder,
     this.noItemsFoundBuilder,
     this.scrollController,
-    this.suggestionsBoxController,
-    this.suggestionsBoxDecoration = const SuggestionsBoxDecoration(),
     this.suggestionsBoxVerticalOffset = 5.0,
-    this.textFieldConfiguration = const TextFieldConfiguration(),
-    this.transitionBuilder,
     this.decoration,
     this.valueTransformer,
     this.enabled = true,
@@ -441,8 +392,7 @@ class PlacesAutocomplete extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     /// Get text controller from [searchController] or create new instance of [TextEditingController] if [searchController] is null or empty
-    final textController = useState<TextEditingController>(
-        searchController ?? TextEditingController());
+    final textController = useState<TextEditingController>(searchController ?? TextEditingController());
     return SafeArea(
       bottom: bottom,
       left: left,
@@ -502,15 +452,13 @@ class PlacesAutocomplete extends StatelessWidget {
                 return predictions;
               },
               onSuggestionSelected: (value) async {
-                textController.value.selection = TextSelection.collapsed(
-                    offset: textController.value.text.length);
+                textController.value.selection = TextSelection.collapsed(offset: textController.value.text.length);
                 _getDetailsByPlaceId(value.placeId ?? "", context);
                 onSuggestionSelected?.call(value);
               },
               hideSuggestionsOnKeyboardHide: hideSuggestionsOnKeyboardHide,
               initialValue: initialValue,
               validator: validator,
-              suggestionsBoxDecoration: suggestionsBoxDecoration,
               scrollController: scrollController,
               animationDuration: animationDuration,
               animationStart: animationStart,
@@ -525,14 +473,10 @@ class PlacesAutocomplete extends StatelessWidget {
               hideOnError: hideOnError,
               hideOnLoading: hideOnLoading,
               keepSuggestionsOnLoading: keepSuggestionsOnLoading,
-              keepSuggestionsOnSuggestionSelected:
-                  keepSuggestionsOnSuggestionSelected,
+              keepSuggestionsOnSuggestionSelected: keepSuggestionsOnSuggestionSelected,
               loadingBuilder: loadingBuilder,
               noItemsFoundBuilder: noItemsFoundBuilder,
-              suggestionsBoxController: suggestionsBoxController,
               suggestionsBoxVerticalOffset: suggestionsBoxVerticalOffset,
-              textFieldConfiguration: textFieldConfiguration,
-              transitionBuilder: transitionBuilder,
               valueTransformer: valueTransformer,
               enabled: enabled,
               autovalidateMode: autovalidateMode,
@@ -575,8 +519,7 @@ class PlacesAutocomplete extends StatelessWidget {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(response.errorMessage ??
-                  "Address not found, something went wrong!"),
+              content: Text(response.errorMessage ?? "Address not found, something went wrong!"),
             ),
           );
         }
