@@ -396,6 +396,7 @@ class _PlacesAutocompleteState extends State<PlacesAutocomplete> {
           leading: widget.hideBackButton
               ? null
               : widget.backButton ?? const BackButton(),
+          horizontalTitleGap: 5,
           title: ClipRRect(
             borderRadius: widget.borderRadius,
             child: FormBuilderTypeAhead<Prediction>(
@@ -403,6 +404,9 @@ class _PlacesAutocompleteState extends State<PlacesAutocomplete> {
                   InputDecoration(
                     hintText: widget.searchHintText,
                     border: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    contentPadding: EdgeInsets.all(12),
                     filled: true,
                     suffixIcon:
                         (widget.showClearButton && widget.initialValue == null)
